@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import me.dkim19375.mcservercreator.MCServerCreator;
 import me.dkim19375.mcservercreator.util.ColorUtils;
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 public class VersionController {
     @FXML
+    private BorderPane outerBackground;
+    @FXML
     private VBox background;
     @FXML
     private ListView<String> versionList;
@@ -24,17 +27,22 @@ public class VersionController {
     private Button submitButton;
     @FXML
     private Label mustSelectLabel;
+    @FXML
+    private Button backButton;
 
     @FXML
     private void initialize() {
         MCServerCreator.setVersionController(this);
+        outerBackground.setBackground(ColorUtils.getBackground(20, 20, 20));
         background.setBackground(ColorUtils.getBackground(20, 20, 20));
         submitButton.setBackground(ColorUtils.getBackground(187, 134, 252));
         versionList.setBackground(ColorUtils.getBackground(40, 40, 40));
+        backButton.setBackground(ColorUtils.getBackground(3, 218, 197));
         versionList.setScaleX(1.8);
         versionList.setScaleY(1.8);
         versionList.setScaleZ(1.8);
         mustSelectLabel.setVisible(false);
+        backButton.setOnAction((event) -> MCServerCreator.getPrimaryStage().getScene().setRoot(MCServerCreator.getChooseTypeRoot()));
     }
 
     public void onShow() {
@@ -64,6 +72,7 @@ public class VersionController {
                 return;
             }
             MCServerCreator.setVersion(versionList.getSelectionModel().getSelectedItem());
+            MCServerCreator.getPrimaryStage().getScene().setRoot(MCServerCreator.getChooseDirectoryRoot());
         });
     }
 }
