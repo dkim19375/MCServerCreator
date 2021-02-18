@@ -1,0 +1,66 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '2.4.9'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+mainClassName = 'me.dkim19375.mcservercreator.MCServerCreatorMain'
+
+group 'me.dkim19375'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = targetCompatibility = 11
+compileJava.options.encoding = 'UTF-8'
+
+application {
+    mainModule = 'MCServerCreator.main'
+    mainClass = 'me.dkim19375.mcservercreator.MCServerCreator'
+}
+
+launch4j {
+    outfile = "${project.name}-${project.version}.exe"
+    mainClassName = project.mainClassName
+    copyConfigurable = []
+    jar = "../libs/${project.tasks.shadowJar.archiveName}"
+    version = project.version
+    textVersion = project.version
+    fileDescription = 'A program to create server files'
+    windowTitle = project.version
+}
+
+def currentOS = DefaultNativePlatform.currentOperatingSystem
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
+
+java {
+    modularity.inferModulePath = true
+}
+
+distTar {
+    compression = Compression.GZIP
+    archiveExtension = "tar.gz"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation "org.openjfx:javafx-base:11.0.2:${platform}"
+    implementation "org.openjfx:javafx-controls:11.0.2:${platform}"
+    implementation "org.openjfx:javafx-graphics:11.0.2:${platform}"
+    implementation "org.openjfx:javafx-fxml:11.0.2:${platform}"
+}
+
+shadowJar.finalizedBy createExe
+shadowJar.finalizedBy distTar
