@@ -32,7 +32,7 @@ public class VersionController {
 
     @FXML
     private void initialize() {
-        MCServerCreator.setVersionController(this);
+        MCServerCreator.getInstance().setVersionController(this);
         outerBackground.setBackground(ColorUtils.getBackground(20, 20, 20));
         background.setBackground(ColorUtils.getBackground(20, 20, 20));
         submitButton.setBackground(ColorUtils.getBackground(187, 134, 252));
@@ -42,12 +42,13 @@ public class VersionController {
         versionList.setScaleY(1.8);
         versionList.setScaleZ(1.8);
         mustSelectLabel.setVisible(false);
-        backButton.setOnAction((event) -> MCServerCreator.getPrimaryStage().getScene().setRoot(MCServerCreator.getChooseTypeRoot()));
+        backButton.setOnAction((event) -> MCServerCreator.getInstance().getPrimaryStage().getScene()
+                .setRoot(MCServerCreator.getInstance().getChooseTypeRoot()));
     }
 
     public void onShow() {
         final ObservableList<String> versions = FXCollections.observableArrayList();
-        switch (MCServerCreator.getServerType()) {
+        switch (MCServerCreator.getInstance().getServerType()) {
             case PAPER:
             case SPIGOT:
                 versions.add("1.8.8");
@@ -71,8 +72,8 @@ public class VersionController {
                 service.schedule(() -> mustSelectLabel.setVisible(false), 3, TimeUnit.SECONDS);
                 return;
             }
-            MCServerCreator.setVersion(versionList.getSelectionModel().getSelectedItem());
-            MCServerCreator.getPrimaryStage().getScene().setRoot(MCServerCreator.getChooseDirectoryRoot());
+            MCServerCreator.getInstance().setVersion(versionList.getSelectionModel().getSelectedItem());
+            MCServerCreator.getInstance().getPrimaryStage().getScene().setRoot(MCServerCreator.getInstance().getChooseDirectoryRoot());
         });
     }
 }

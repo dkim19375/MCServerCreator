@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="outerBackground" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.dkim19375.mcservercreator.controller.VersionController">
    <center>
       <VBox fx:id="background" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="1019.0">
@@ -26,13 +25,13 @@
             <HBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="1019.0" />
             <HBox alignment="CENTER" prefHeight="123.0" prefWidth="812.0">
                <children>
-                  <ListView fx:id="versionList" prefHeight="77.0" prefWidth="269.0" />
+                  <ListView fx:id="versionList" prefHeight="77.0" prefWidth="269.0" style="-fx-control-inner-background: #111111; -fx-accent: #009917; -fx-focus-color: #000000; -fx-text-background-color: #FFFFFF;" />
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1019.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" text="Next" textAlignment="CENTER">
+                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
                      <font>
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>

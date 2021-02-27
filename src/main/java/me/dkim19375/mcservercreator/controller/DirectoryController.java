@@ -22,6 +22,7 @@ public class DirectoryController {
     private Label directory;
     @FXML
     private Button backButton;
+    private File directoryFile = null;
 
     @FXML
     private void initialize() {
@@ -32,12 +33,17 @@ public class DirectoryController {
         changeButton.setOnAction((event) -> {
             final DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Server Directory");
-            final File selectedDirectory = directoryChooser.showDialog(MCServerCreator.getPrimaryStage());
-            if (selectedDirectory == null) {
+            directoryFile = directoryChooser.showDialog(MCServerCreator.getInstance().getPrimaryStage());
+            if (directoryFile == null) {
                 return;
             }
-            directory.setText(selectedDirectory.getAbsolutePath());
+            directory.setText(directoryFile.getAbsolutePath());
         });
-        backButton.setOnAction((event) -> MCServerCreator.getPrimaryStage().getScene().setRoot(MCServerCreator.getChooseVersionRoot()));
+        backButton.setOnAction((event) -> MCServerCreator.getInstance().getPrimaryStage().getScene()
+                .setRoot(MCServerCreator.getInstance().getChooseVersionRoot()));
+    }
+
+    public File getDirectory() {
+        return directoryFile;
     }
 }

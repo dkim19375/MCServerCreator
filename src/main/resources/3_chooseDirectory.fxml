@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="outerBackground" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.dkim19375.mcservercreator.controller.DirectoryController">
    <center>
       <VBox fx:id="background" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="812.0">
@@ -40,7 +39,15 @@
                   </Button>
                </children>
             </HBox>
-            <VBox alignment="BOTTOM_LEFT" />
+            <HBox alignment="CENTER" prefHeight="66.0" prefWidth="812.0">
+               <children>
+                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
+                     <font>
+                        <Font name="SansSerif Bold" size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </center>
