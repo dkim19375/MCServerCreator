@@ -23,9 +23,9 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <Label fx:id="directory" prefHeight="67.0" prefWidth="545.0" text="None" textFill="WHITE">
+                  <Label fx:id="directory" prefHeight="67.0" prefWidth="562.0" text="None" textFill="WHITE">
                      <font>
-                        <Font size="20.0" />
+                        <Font size="19.0" />
                      </font>
                   </Label>
                </children>
@@ -41,7 +41,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="66.0" prefWidth="812.0">
                <children>
-                  <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
+                  <Button fx:id="nextButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
                      <font>
                         <Font name="SansSerif Bold" size="20.0" />
                      </font>

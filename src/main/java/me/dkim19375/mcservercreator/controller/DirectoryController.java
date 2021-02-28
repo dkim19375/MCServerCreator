@@ -22,6 +22,8 @@ public class DirectoryController {
     private Label directory;
     @FXML
     private Button backButton;
+    @FXML
+    private Button nextButton;
     private File directoryFile = null;
 
     @FXML
@@ -30,6 +32,7 @@ public class DirectoryController {
         background.setBackground(ColorUtils.getBackground(20, 20, 20));
         changeButton.setBackground(ColorUtils.getBackground(187, 134, 252));
         backButton.setBackground(ColorUtils.getBackground(3, 218, 197));
+        nextButton.setBackground(ColorUtils.getBackground(187, 134, 252));
         changeButton.setOnAction((event) -> {
             final DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Server Directory");
