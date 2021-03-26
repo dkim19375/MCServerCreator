@@ -16,8 +16,8 @@ sourceCompatibility = targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
 
 application {
-    mainModule = 'MCServerCreator.main'
-    mainClass = 'me.dkim19375.mcservercreator.MCServerCreator'
+    mainModule.set('MCServerCreator.main')
+    mainClass.set('me.dkim19375.mcservercreator.MCServerCreator')
 }
 
 launch4j {
@@ -47,7 +47,7 @@ java {
 
 distTar {
     compression = Compression.GZIP
-    archiveExtension = "tar.gz"
+    archiveExtension.set("tar.gz")
 }
 
 repositories {
@@ -56,6 +56,7 @@ repositories {
 
 dependencies {
     implementation 'commons-io:commons-io:2.8.0'
+    compile 'io.github.alekseysotnikov:CmdTool:1.0.1'
     implementation "org.openjfx:javafx-base:11.0.2:${platform}"
     implementation "org.openjfx:javafx-controls:11.0.2:${platform}"
     implementation "org.openjfx:javafx-graphics:11.0.2:${platform}"
