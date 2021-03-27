@@ -15,7 +15,7 @@
       </Label>
       <HBox alignment="CENTER" prefHeight="70.0" prefWidth="600.0">
          <children>
-            <Button fx:id="tuinityButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" text="Tuinity (Recommended, 1.13+)">
+            <Button fx:id="tuinityButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" text="Tuinity (Recommended, 1.15+)">
                <font>
                   <Font name="SansSerif Bold" size="20.0" />
                </font></Button>

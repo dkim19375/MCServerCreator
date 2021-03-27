@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import me.dkim19375.mcservercreator.MCServerCreator;
 import me.dkim19375.mcservercreator.util.ColorUtils;
+import me.dkim19375.mcservercreator.util.ServerVersion;
 
 import java.util.Collections;
 import java.util.concurrent.Executors;
@@ -29,6 +30,7 @@ public class VersionController {
     private Label mustSelectLabel;
     @FXML
     private Button backButton;
+    private boolean done = false;
 
     @FXML
     private void initialize() {
@@ -42,8 +44,11 @@ public class VersionController {
         versionList.setScaleY(1.8);
         versionList.setScaleZ(1.8);
         mustSelectLabel.setVisible(false);
-        backButton.setOnAction((event) -> MCServerCreator.getInstance().getPrimaryStage().getScene()
-                .setRoot(MCServerCreator.getInstance().getChooseTypeRoot()));
+        backButton.setOnAction((event) -> {
+            done = false;
+            MCServerCreator.getInstance().getPrimaryStage().getScene()
+                    .setRoot(MCServerCreator.getInstance().getChooseTypeRoot());
+        });
     }
 
     public void onShow() {
@@ -51,28 +56,32 @@ public class VersionController {
         switch (MCServerCreator.getInstance().getServerType()) {
             case PAPER:
             case SPIGOT:
-                versions.add("1.8.8");
-                versions.add("1.9.4");
-                versions.add("1.10.2");
-                versions.add("1.11.2");
-                versions.add("1.12.2");
+                versions.add(ServerVersion.v1_8.getVersion());
+                versions.add(ServerVersion.v1_9.getVersion());
+                versions.add(ServerVersion.v1_10.getVersion());
+                versions.add(ServerVersion.v1_11.getVersion());
+                versions.add(ServerVersion.v1_12.getVersion());
+                versions.add(ServerVersion.v1_13.getVersion());
+                versions.add(ServerVersion.v1_14.getVersion());
             case TUINITY:
-                versions.add("1.13.2");
-                versions.add("1.14.4");
-                versions.add("1.15.2");
-                versions.add("1.16.5");
+                versions.add(ServerVersion.v1_15.getVersion());
+                versions.add(ServerVersion.v1_16.getVersion());
         }
         Collections.reverse(versions);
         versionList.setItems(versions);
         versionList.setBackground(ColorUtils.getBackground(40, 40, 40));
         submitButton.setOnAction((event) -> {
+            if (done) {
+                return;
+            }
+            done = true;
             if (versionList.getSelectionModel().getSelectedItems().size() < 1) {
                 final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
                 mustSelectLabel.setVisible(true);
                 service.schedule(() -> mustSelectLabel.setVisible(false), 3, TimeUnit.SECONDS);
                 return;
             }
-            MCServerCreator.getInstance().setVersion(versionList.getSelectionModel().getSelectedItem());
+            MCServerCreator.getInstance().setVersion(ServerVersion.fromString(versionList.getSelectionModel().getSelectedItem()));
             MCServerCreator.getInstance().getPrimaryStage().getScene().setRoot(MCServerCreator.getInstance().getChooseDirectoryRoot());
         });
     }

@@ -10,6 +10,7 @@ import me.dkim19375.mcservercreator.MCServerCreator;
 import me.dkim19375.mcservercreator.util.ColorUtils;
 
 import java.io.File;
+import java.util.concurrent.Executors;
 
 public class DirectoryController {
     @FXML
@@ -25,9 +26,11 @@ public class DirectoryController {
     @FXML
     private Button nextButton;
     private File directoryFile = null;
+    private boolean done = false;
 
     @FXML
     private void initialize() {
+        MCServerCreator.getInstance().setDirectoryController(this);
         outerBackground.setBackground(ColorUtils.getBackground(20, 20, 20));
         background.setBackground(ColorUtils.getBackground(20, 20, 20));
         changeButton.setBackground(ColorUtils.getBackground(187, 134, 252));
@@ -42,8 +45,22 @@ public class DirectoryController {
             }
             directory.setText(directoryFile.getAbsolutePath());
         });
-        backButton.setOnAction((event) -> MCServerCreator.getInstance().getPrimaryStage().getScene()
-                .setRoot(MCServerCreator.getInstance().getChooseVersionRoot()));
+        backButton.setOnAction((event) -> {
+            done = false;
+            MCServerCreator.getInstance().getPrimaryStage().getScene()
+                    .setRoot(MCServerCreator.getInstance().getChooseVersionRoot());
+        });
+        nextButton.setOnAction((event) -> {
+            if (done) {
+                return;
+            }
+            done = true;
+            if (directoryFile != null) {
+                MCServerCreator.getInstance().getPrimaryStage().getScene()
+                        .setRoot(MCServerCreator.getInstance().getInstallerRoot());
+                Executors.newSingleThreadExecutor().submit(() -> MCServerCreator.getInstance().getInstallerController().onShow());
+            }
+        });
     }
 
     public File getDirectory() {

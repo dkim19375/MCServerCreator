@@ -4,6 +4,7 @@ module MCServerCreator.main {
     requires javafx.graphics;
     requires javafx.fxml;
     requires org.apache.commons.io;
+    requires org.jetbrains.annotations;
 
     opens me.dkim19375.mcservercreator to javafx.fxml;
     opens me.dkim19375.mcservercreator.util to javafx.fxml;

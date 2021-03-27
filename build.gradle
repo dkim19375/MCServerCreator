@@ -56,11 +56,12 @@ repositories {
 
 dependencies {
     implementation 'commons-io:commons-io:2.8.0'
-    compile 'io.github.alekseysotnikov:CmdTool:1.0.1'
-    implementation "org.openjfx:javafx-base:11.0.2:${platform}"
-    implementation "org.openjfx:javafx-controls:11.0.2:${platform}"
-    implementation "org.openjfx:javafx-graphics:11.0.2:${platform}"
-    implementation "org.openjfx:javafx-fxml:11.0.2:${platform}"
+    implementation 'io.github.alekseysotnikov:CmdTool:1.0.1'
+    implementation 'org.jetbrains:annotations:+'
+    implementation "org.openjfx:javafx-base:16:${platform}"
+    implementation "org.openjfx:javafx-controls:16:${platform}"
+    implementation "org.openjfx:javafx-graphics:16:${platform}"
+    implementation "org.openjfx:javafx-fxml:16:${platform}"
 }
 
 shadowJar.finalizedBy createExe
