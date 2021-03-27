@@ -115,7 +115,7 @@ public class InstallerController {
                     throwError("Could not sleep thread");
                 }
                 sendMessage("NOTE: It might seem like nothing is happening... it might take up to a minute for anything to output.");
-                sendMessage("If nothing outputs within 2-5 minutes, you should restart.")
+                sendMessage("If nothing outputs within 2-5 minutes, you should restart.");
                 final ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "java -jar " + file.getAbsolutePath()
                        + " --rev " + version.getVersion());
                 builder.redirectErrorStream(true);
@@ -141,12 +141,11 @@ public class InstallerController {
                     throwError("Status while running BuildTools is " + status);
                     return;
                 }
-                final File serverFile = Paths.get("data", "spigot", "buildtools", "spigot-" + version.getVersion() + ".jar").toFile();
-                if (!serverFile.exists()) {
-                    throwError("Could not find server jar! (" + serverFile.getAbsolutePath() + ")");
+                if (!mavenJar.exists()) {
+                    throwError("Could not find server jar! (" + mavenJar.getAbsolutePath() + ")");
                     return;
                 }
-                serverJar = serverFile;
+                serverJar = mavenJar;
                 sendMessage("Finished running BuildTools");
                 break;
             }
