@@ -114,7 +114,9 @@ public class InstallerController {
                     e.printStackTrace();
                     throwError("Could not sleep thread");
                 }
-                final ProcessBuilder builder = new ProcessBuilder("java -jar " + file.getAbsolutePath()
+                sendMessage("NOTE: It might seem like nothing is happening... it might take up to a minute for anything to output.");
+                sendMessage("If nothing outputs within 2-5 minutes, you should restart.")
+                final ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "java -jar " + file.getAbsolutePath()
                        + " --rev " + version.getVersion());
                 builder.redirectErrorStream(true);
                 final Process process;
@@ -126,7 +128,7 @@ public class InstallerController {
                     return;
                 }
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                reader.lines().forEach(consoleText::appendText);
+                reader.lines().forEach(this::sendMessage);
                 final int status;
                 try {
                     status = process.waitFor();
