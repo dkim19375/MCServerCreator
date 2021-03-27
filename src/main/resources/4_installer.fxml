@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -21,21 +22,26 @@
       <HBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="1019.0" />
       <HBox alignment="CENTER" prefHeight="156.0" prefWidth="1019.0">
          <children>
-            <TextArea fx:id="consoleText" cacheShape="false" editable="false" prefHeight="156.0" prefWidth="805.0" style="-fx-control-inner-background: #111111; -fx-text-background-color: #FFFFFF; -fx-text-fill: #FFFFFF;">
+            <TextArea fx:id="consoleText" cacheShape="false" editable="false" prefHeight="156.0" prefWidth="595.0" style="-fx-control-inner-background: #111111; -fx-text-background-color: #FFFFFF; -fx-text-fill: #FFFFFF; -fx-stroke-width: 1; -fx-padding: 0;">
                <font>
                   <Font size="8.0" />
                </font></TextArea>
          </children>
       </HBox>
       <HBox alignment="TOP_CENTER" prefHeight="70.0" prefWidth="1019.0" />
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <StackPane prefHeight="100.0" prefWidth="370.0">
          <children>
-            <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="371.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
+            <Button fx:id="submitButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="370.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Next" textAlignment="CENTER">
                <font>
                   <Font name="SansSerif Bold" size="20.0" />
                </font>
             </Button>
+            <Button fx:id="closeButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="370.0" style="-fx-control-inner-background: #BB86FC; -fx-text-fill: #FFFFFF;" text="Cancelled - Press to Close" textAlignment="CENTER">
+               <font>
+                  <Font name="SansSerif Bold" size="17.0" />
+               </font>
+            </Button>
          </children>
-      </HBox>
+      </StackPane>
    </children>
 </VBox>

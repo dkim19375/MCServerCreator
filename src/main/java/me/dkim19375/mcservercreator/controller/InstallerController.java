@@ -7,9 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import me.dkim19375.mcservercreator.MCServerCreator;
-import me.dkim19375.mcservercreator.util.ColorUtils;
-import me.dkim19375.mcservercreator.util.ServerType;
-import me.dkim19375.mcservercreator.util.ServerVersion;
+import me.dkim19375.mcservercreator.util.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
@@ -20,23 +18,28 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class InstallerController {
+    private final Thread mainThread = Thread.currentThread();
     @FXML
     Button submitButton;
+    @FXML
+    Button closeButton;
     @FXML
     private VBox background;
     @FXML
     private TextArea consoleText;
     private boolean shown = false;
-    private final Thread mainThread = Thread.currentThread();
 
     @FXML
     private void initialize() {
         MCServerCreator.getInstance().setInstallerController(this);
         submitButton.setVisible(false);
+        closeButton.setVisible(false);
         background.setBackground(ColorUtils.getBackground(20, 20, 20));
         submitButton.setBackground(ColorUtils.getBackground(187, 134, 252));
+        closeButton.setBackground(ColorUtils.getBackground(187, 134, 252));
         consoleText.setBackground(ColorUtils.getBackground(40, 40, 40));
         consoleText.setScaleX(1.8);
         consoleText.setScaleY(1.8);
@@ -64,27 +67,37 @@ public class InstallerController {
             } catch (Exception e) {
                 e.printStackTrace();
                 final String message = e.getLocalizedMessage();
-                throwError(message == null ? "Unknown error while installing" : message);
+                if (ErrorUtils.prompt("Unknown error while installing"
+                        + (message == null ? "" : (":\n" + message)))) {
+                    consoleText.appendText("Retrying");
+                    onShow();
+                    return;
+                }
+                consoleText.appendText("Cancelled");
+                showCloseButton();
             }
             return;
         }
         sendMessage("Starting installation");
         final ServerVersion version = MCServerCreator.getInstance().getVersion();
         if (version == null) {
-            throwError("Server version is not set!");
+            consoleText.appendText("ERROR: Server version is not set!");
+            showCloseButton();
             return;
         }
         final ServerType type = MCServerCreator.getInstance().getServerType();
         if (type == null) {
-            throwError("Server type is not set!");
+            consoleText.appendText("ERROR: Server type is not set!");
+            showCloseButton();
             return;
         }
         final File installDir = MCServerCreator.getInstance().getDirectoryController().getDirectory();
         if (installDir == null) {
-            throwError("Install directory is not set!");
+            consoleText.appendText("ERROR: Install directory is not set!");
+            showCloseButton();
             return;
         }
-        File serverJar = null;
+        File serverJar;
         switch (type) {
             case SPIGOT: {
                 sendMessage("Looking to see if BuildTools was already ran for this version");
@@ -112,38 +125,59 @@ public class InstallerController {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                    throwError("Could not sleep thread");
                 }
                 sendMessage("NOTE: It might seem like nothing is happening... it might take up to a minute for anything to output.");
                 sendMessage("If nothing outputs within 2-5 minutes, you should restart.");
                 final ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "java -jar " + file.getAbsolutePath()
-                       + " --rev " + version.getVersion());
+                        + " --rev " + version.getVersion());
                 builder.redirectErrorStream(true);
-                final Process process;
-                try {
-                    process = builder.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throwError("Could not start process!");
-                    return;
+                Process process;
+                while (true) {
+                    try {
+                        process = builder.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        if (ErrorUtils.prompt(StringUtils.combineNewline("Could not start process:", e.getLocalizedMessage()))) {
+                            consoleText.appendText("Retrying to start BuildTools");
+                            continue;
+                        }
+                        showCloseButton();
+                        return;
+                    }
+                    break;
                 }
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()));
                 reader.lines().forEach(this::sendMessage);
-                final int status;
-                try {
-                    status = process.waitFor();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    throwError("Could not block thread to wait");
-                    return;
-                }
-                if (status != 0) {
-                    throwError("Status while running BuildTools is " + status);
-                    return;
-                }
-                if (!mavenJar.exists()) {
-                    throwError("Could not find server jar! (" + mavenJar.getAbsolutePath() + ")");
-                    return;
+                int status;
+                while (true) {
+                    try {
+                        status = process.waitFor();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        if (ErrorUtils.prompt(StringUtils.combineNewline("Could not block thread to wait:", e.getLocalizedMessage()))) {
+                            consoleText.appendText("Retrying to start BuildTools");
+                            continue;
+                        }
+                        showCloseButton();
+                        return;
+                    }
+                    if (status != 0) {
+                        if (ErrorUtils.prompt("Status while running BuildTools is " + status)) {
+                            consoleText.appendText("Retrying to start BuildTools");
+                            continue;
+                        }
+                        showCloseButton();
+                        return;
+                    }
+                    if (!mavenJar.exists()) {
+                        if (ErrorUtils.prompt("Could not find server jar! (" + mavenJar.getAbsolutePath() + ")")) {
+                            consoleText.appendText("Retrying to start BuildTools");
+                            continue;
+                        }
+                        showCloseButton();
+                        return;
+                    }
+                    break;
                 }
                 serverJar = mavenJar;
                 sendMessage("Finished running BuildTools");
@@ -191,7 +225,8 @@ public class InstallerController {
                     }
                     default: {
                         sendMessage("Downloading " + type.getJarFile());
-                        throwError("Tuinity software MUST be 1.15 - 1.16, instead it was " + version.getVersion());
+                        consoleText.appendText("Tuinity software MUST be 1.15 - 1.16, instead it was " + version.getVersion());
+                        showCloseButton();
                         return;
                     }
                 }
@@ -199,82 +234,126 @@ public class InstallerController {
                 break;
             }
             default: {
-                throwError("Server software must be either: " + Arrays.toString(ServerType.values()) + ", instead it was " + type.name());
+                consoleText.appendText("Server software must be either: " + Arrays.toString(ServerType.values()) + ", instead it was " + type.name());
+                showCloseButton();
                 return;
             }
         }
         sendMessage("Copying the jar to " + installDir.getAbsolutePath() + "...");
         if (!installDir.exists()) {
             sendMessage("Directory does not exist, creating one");
-            if (!installDir.mkdirs()) {
-                throwError("Could not create directory " + installDir.getAbsolutePath());
-                return;
+            while (true) {
+                if (!installDir.mkdirs()) {
+                    if (ErrorUtils.prompt(("Could not create directory " + installDir.getAbsolutePath()))) {
+                        consoleText.appendText("Retrying to create directory");
+                        continue;
+                    }
+                    showCloseButton();
+                    return;
+                }
+                break;
             }
             sendMessage("Successfully created directory");
         }
         final File installFile = Paths.get(installDir.getAbsolutePath(), type.getJarFile()).toFile();
         if (installFile.exists()) {
-            if (!installFile.delete()) {
-                throwError("Could not delete server jar - " + installFile.getAbsolutePath());
-                return;
+            while (true) {
+                if (!installFile.delete()) {
+                    if (ErrorUtils.prompt("Could not delete server jar - " + installFile.getAbsolutePath())) {
+                        consoleText.appendText("Retrying to delete server jar");
+                        continue;
+                    }
+                    showCloseButton();
+                    return;
+                }
+                break;
             }
         }
-        try {
-            FileUtils.copyFile(serverJar, installFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throwError("Could not copy jar");
-            return;
+        while (true) {
+            try {
+                FileUtils.copyFile(serverJar, installFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (ErrorUtils.prompt(StringUtils.combineNewline("Could not copy jar", e.getLocalizedMessage()))) {
+                    consoleText.appendText("Retrying to copy jar");
+                    continue;
+                }
+                showCloseButton();
+                return;
+            }
+            break;
         }
         sendMessage("Done! Server jar is in " + installDir.getAbsolutePath());
+        showSubmitButton();
+    }
+
+    private void showCloseButton() {
+        if (submitButton.isVisible()) {
+            return;
+        }
+        consoleText.appendText("Canceled");
+        closeButton.setVisible(true);
+    }
+
+    private void showSubmitButton() {
+        closeButton.setVisible(false);
+        submitButton.setVisible(true);
     }
 
     private void downloadFile(String url, File file, String fileName) throws RuntimeException {
         sendMessage("Making directory: " + file.getParentFile().getAbsolutePath());
         if (!file.getParentFile().exists()) {
-            if (!file.getParentFile().mkdirs()) {
-                throwError("Could not create directory: " + file.getParentFile().getAbsolutePath());
-                return;
+            while (true) {
+                if (!file.getParentFile().mkdirs()) {
+                    if (ErrorUtils.prompt("Could not create directory: " + file.getParentFile().getAbsolutePath())) {
+                        consoleText.appendText("Retrying to create directory");
+                        continue;
+                    }
+                    showCloseButton();
+                    return;
+                }
+                break;
             }
         }
         sendMessage("Successfully created directory: " + file.getParentFile().getAbsolutePath());
-        final URL link;
-        try {
-            link = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throwError("Could not form URL: " + url);
-            return;
+        URL link;
+        while (true) {
+            try {
+                link = new URL(url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                if (ErrorUtils.prompt(StringUtils.combineNewline("Could not form URL: " + url, e.getLocalizedMessage()))) {
+                    consoleText.appendText("Retrying to form URL");
+                    continue;
+                }
+                showCloseButton();
+                return;
+            }
+            break;
         }
         sendMessage("Starting download of " + fileName);
-        try {
-            FileUtils.copyURLToFile(link, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throwError("Could not download " + fileName);
-            return;
+        while (true) {
+            try {
+                FileUtils.copyURLToFile(link, file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (ErrorUtils.prompt(StringUtils.combineNewline("Could not download " + fileName, e.getLocalizedMessage()))) {
+                    consoleText.appendText("Retrying download");
+                    continue;
+                }
+                showCloseButton();
+                return;
+            }
+            break;
         }
         sendMessage("Successfully downloaded " + fileName);
     }
-    
+
     private void sendMessage(String message) {
         if (Thread.currentThread() != mainThread) {
             Platform.runLater(() -> consoleText.appendText(message));
             return;
         }
         consoleText.appendText(message);
-    }
-
-    private void throwError(String error) {
-        sendMessage("FATAL ERROR: " + error);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            throw new RuntimeException(error);
-        }));
-        System.exit(1); // I might remove this lol
     }
 }
