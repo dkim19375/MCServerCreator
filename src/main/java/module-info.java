@@ -6,6 +6,8 @@ module MCServerCreator.main {
     requires org.apache.commons.io;
     requires org.jetbrains.annotations;
     requires java.desktop;
+    requires kotlin.stdlib;
+    requires tornadofx;
 
     opens me.dkim19375.mcservercreator to javafx.fxml;
     opens me.dkim19375.mcservercreator.util to javafx.fxml;

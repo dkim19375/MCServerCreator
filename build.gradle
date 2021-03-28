@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'application'
     id 'edu.sc.seis.launch4j' version '2.4.9'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
@@ -16,6 +17,12 @@ final String javafxVersion = '11.0.2'
 
 sourceCompatibility = targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
 
 application {
     mainModule.set('MCServerCreator.main')
@@ -64,6 +71,8 @@ dependencies {
     implementation "org.openjfx:javafx-controls:$javafxVersion:${platform}"
     implementation "org.openjfx:javafx-graphics:$javafxVersion:${platform}"
     implementation "org.openjfx:javafx-fxml:$javafxVersion:${platform}"
+    implementation 'no.tornado:tornadofx:1.7.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
 }
 
 shadowJar.finalizedBy createExe
