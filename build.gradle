@@ -4,11 +4,12 @@ plugins {
     id 'java'
     id 'application'
     id 'edu.sc.seis.launch4j' version '2.4.9'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'org.jetbrains.kotlin.jvm' version '1.4.31'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-mainClassName = 'me.dkim19375.mcservercreator.MCServerCreatorMain'
+mainClassName = 'me.dkim19375.mcservercreator.MCServerCreatorKt'
 
 group 'me.dkim19375'
 version '1.0-SNAPSHOT'
@@ -25,8 +26,11 @@ compileKotlin {
 }
 
 application {
-    mainModule.set('MCServerCreator.main')
     mainClass.set(mainClassName)
+}
+
+javafx {
+    modules = [ 'javafx.base', 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
 }
 
 launch4j {
@@ -67,12 +71,12 @@ dependencies {
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'io.github.alekseysotnikov:CmdTool:1.0.1'
     implementation 'org.jetbrains:annotations:+'
-    implementation "org.openjfx:javafx-base:$javafxVersion:${platform}"
+/*    implementation "org.openjfx:javafx-base:$javafxVersion:${platform}"
     implementation "org.openjfx:javafx-controls:$javafxVersion:${platform}"
     implementation "org.openjfx:javafx-graphics:$javafxVersion:${platform}"
-    implementation "org.openjfx:javafx-fxml:$javafxVersion:${platform}"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:${platform}"*/
     implementation 'no.tornado:tornadofx:1.7.20'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 }
 
 shadowJar.finalizedBy createExe

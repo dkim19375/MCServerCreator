@@ -22,16 +22,12 @@ import java.util.concurrent.Executors
 
 class InstallerController {
     private val mainThread = Thread.currentThread()
-
     @FXML
     lateinit var submitButton: Button
-
     @FXML
     lateinit var closeButton: Button
-
     @FXML
     private lateinit var background: VBox
-
     @FXML
     private lateinit var consoleText: TextArea
     private var shown = false
@@ -56,10 +52,7 @@ class InstallerController {
             .addListener { _: ObservableValue<out String>, _: String, newValue: String ->
                 consoleText.scrollTop = Double.MAX_VALUE
                 if (!newValue.endsWith("\n")) {
-                    consoleText.text = """
-                $newValue
-                
-                """.trimIndent()
+                    consoleText.text = "$newValue\n"
                     for (node in consoleText.childrenUnmodifiable) {
                         node.isCache = false
                     }

@@ -13,7 +13,7 @@ import java.util.*
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-    MCServerCreator.mainLaunch(args)
+    Application.launch(MCServerCreator::class.java, *args)
 }
 
 class MCServerCreator : Application() {
@@ -84,9 +84,5 @@ class MCServerCreator : Application() {
     companion object {
         lateinit var instance: MCServerCreator
             private set
-
-        fun mainLaunch(args: Array<String>) {
-            launch(*args)
-        }
     }
 }
