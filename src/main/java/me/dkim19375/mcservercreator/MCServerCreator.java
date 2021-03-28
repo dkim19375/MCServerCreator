@@ -1,18 +1,13 @@
 package me.dkim19375.mcservercreator;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import me.dkim19375.mcservercreator.controller.DirectoryController;
-import me.dkim19375.mcservercreator.controller.InstallerController;
-import me.dkim19375.mcservercreator.controller.ServerTypeController;
-import me.dkim19375.mcservercreator.controller.VersionController;
+import me.dkim19375.mcservercreator.controller.*;
 import me.dkim19375.mcservercreator.util.ServerType;
 import me.dkim19375.mcservercreator.util.ServerVersion;
 
@@ -25,16 +20,18 @@ public class MCServerCreator extends Application {
     private Parent chooseVersionRoot = null;
     private Parent chooseDirectoryRoot = null;
     private Parent installerRoot = null;
+    private Parent optionsRoot = null;
     private ServerType serverType = null;
     private ServerVersion version = null;
     private ServerTypeController serverTypeController = null;
     private VersionController versionController = null;
     private DirectoryController directoryController = null;
     private InstallerController installerController = null;
+    private OptionsController optionsController = null;
 
-    protected static void main(String[] args) {
-        launch(args);
-    }
+    // protected static void main(String[] args) {
+    //     launch(args);
+    // }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -49,13 +46,8 @@ public class MCServerCreator extends Application {
                 .getResource("3_chooseDirectory.fxml")));
         installerRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader()
                 .getResource("4_installer.fxml")));
-        primaryStage.setOnCloseRequest(event -> {
-            if (event.getEventType() != WindowEvent.WINDOW_CLOSE_REQUEST) {
-                return;
-            }
-            primaryStage.close();
-            System.exit(0);
-        });
+        optionsRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("5_options.fxml")));
         primaryStage.setTitle("MC Server Creator");
         primaryStage.setScene(new Scene(chooseTypeRoot, 1280, 720));
         primaryStage.setMaximized(true);
@@ -132,5 +124,22 @@ public class MCServerCreator extends Application {
 
     public static MCServerCreator getInstance() {
         return instance;
+    }
+
+    public OptionsController getOptionsController() {
+        return optionsController;
+    }
+
+    public void setOptionsController(OptionsController optionsController) {
+        this.optionsController = optionsController;
+    }
+
+    public Parent getOptionsRoot() {
+        return optionsRoot;
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
     }
 }

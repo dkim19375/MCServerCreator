@@ -19,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 public class InstallerController {
     private final Thread mainThread = Thread.currentThread();
@@ -56,6 +57,12 @@ public class InstallerController {
                     node.setCache(false);
                 }
             }
+        });
+        submitButton.setOnAction(event -> {
+            submitButton.setVisible(false);
+            MCServerCreator.getInstance().getPrimaryStage().getScene()
+                    .setRoot(MCServerCreator.getInstance().getOptionsRoot());
+            Executors.newSingleThreadExecutor().submit(() -> MCServerCreator.getInstance().getOptionsController().onShow());
         });
     }
 
