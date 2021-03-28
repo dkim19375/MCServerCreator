@@ -12,12 +12,14 @@ mainClassName = 'me.dkim19375.mcservercreator.MCServerCreatorMain'
 group 'me.dkim19375'
 version '1.0-SNAPSHOT'
 
+final String javafxVersion = '11.0.2'
+
 sourceCompatibility = targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
 
 application {
     mainModule.set('MCServerCreator.main')
-    mainClass.set('me.dkim19375.mcservercreator.MCServerCreator')
+    mainClass.set(mainClassName)
 }
 
 launch4j {
@@ -58,10 +60,10 @@ dependencies {
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'io.github.alekseysotnikov:CmdTool:1.0.1'
     implementation 'org.jetbrains:annotations:+'
-    implementation "org.openjfx:javafx-base:16:${platform}"
-    implementation "org.openjfx:javafx-controls:16:${platform}"
-    implementation "org.openjfx:javafx-graphics:16:${platform}"
-    implementation "org.openjfx:javafx-fxml:16:${platform}"
+    implementation "org.openjfx:javafx-base:$javafxVersion:${platform}"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:${platform}"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:${platform}"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:${platform}"
 }
 
 shadowJar.finalizedBy createExe

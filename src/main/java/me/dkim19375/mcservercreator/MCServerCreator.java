@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import me.dkim19375.mcservercreator.controller.*;
 import me.dkim19375.mcservercreator.util.ServerType;
 import me.dkim19375.mcservercreator.util.ServerVersion;
@@ -29,9 +28,9 @@ public class MCServerCreator extends Application {
     private InstallerController installerController = null;
     private OptionsController optionsController = null;
 
-    // protected static void main(String[] args) {
-    //     launch(args);
-    // }
+     protected static void main(String[] args) {
+         launch(args);
+     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -139,7 +138,7 @@ public class MCServerCreator extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         System.exit(0);
     }
 }

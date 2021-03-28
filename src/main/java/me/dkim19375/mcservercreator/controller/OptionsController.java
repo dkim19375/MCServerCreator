@@ -11,6 +11,8 @@ import me.dkim19375.mcservercreator.MCServerCreator;
 import me.dkim19375.mcservercreator.util.ColorUtils;
 import me.dkim19375.mcservercreator.util.ErrorUtils;
 import me.dkim19375.mcservercreator.util.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,9 +21,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -162,45 +162,45 @@ public class OptionsController {
                 : properties.getProperty(key.getKey());
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private int getIntFromProperties(ServerProperty key) {
-        if (!properties.containsKey(key.getKey())) {
-            try {
-                return Integer.parseInt(getDefaultProperties().getProperty(key.getKey()));
-            } catch (Exception ignored) {
-                return 0;
-            }
+    @Contract("null -> null")
+    @Nullable
+    private Integer getIntFromString(String str) {
+        if (str == null) {
+            return null;
         }
         try {
-            return Integer.parseInt(properties.getProperty(key.getKey()));
+            return Integer.parseInt(str);
         } catch (Exception ignored) {
-            try {
-                return Integer.parseInt(getDefaultProperties().getProperty(key.getKey()));
-            } catch (Exception e) {
-                return 0;
-            }
+            return null;
         }
     }
 
-    private boolean getBooleanFromProperties(ServerProperty key) {
-        if (!properties.containsKey(key)) {
-            try {
-                return Boolean.getBoolean(getDefaultProperties().getProperty(key.getKey()));
-            } catch (Exception ignored) {
-                System.out.println("false 1: getDefaultProperties().getProperty(key.getKey()) "
-                        + getDefaultProperties().getProperty(key.getKey()));
-                return false;
-            }
+    @Contract(value = "null -> null", pure = true)
+    @Nullable
+    private Boolean getBooleanFromString(String str) {
+        if (str == null) {
+            return null;
         }
         try {
-            return Boolean.getBoolean(properties.getProperty(key.getKey()));
+            return Boolean.parseBoolean(str);
         } catch (Exception ignored) {
-            try {
-                return Boolean.getBoolean(getDefaultProperties().getProperty(key.getKey()));
-            } catch (Exception e) {
-                return false;
-            }
+            return null;
         }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private int getIntFromProperties(ServerProperty key) {
+        final Integer property = getIntFromString(properties.getProperty(key.getKey()));
+        final Integer defaultProp = getIntFromString(getDefaultProperties().getProperty(key.getKey()));
+        //noinspection ConstantConditions
+        return property == null ? defaultProp : property;
+    }
+
+    private boolean getBooleanFromProperties(ServerProperty key) {
+        final Boolean property = getBooleanFromString(properties.getProperty(key.getKey()));
+        final Boolean defaultProp = getBooleanFromString(getDefaultProperties().getProperty(key.getKey()));
+        //noinspection ConstantConditions
+        return property == null ? defaultProp : property;
     }
 
     private void setInProperties(ServerProperty key, String value) {
@@ -251,7 +251,7 @@ public class OptionsController {
         forceGamemode.setSelected(getBooleanFromProperties(ServerProperty.FORCE_GAMEMODE));
         difficulty.getSelectionModel().select(getStringFromProperties(ServerProperty.DIFFICULTY));
         gamemode.getSelectionModel().select(getStringFromProperties(ServerProperty.GAMEMODE));
-        viewDistance.getSelectionModel().select(getIntFromProperties(ServerProperty.VIEW_DISTANCE));
+        viewDistance.getSelectionModel().select(getIntFromProperties(ServerProperty.VIEW_DISTANCE) - 3);
         motd.setText(getStringFromProperties(ServerProperty.MOTD));
         resourcePack.setText(getStringFromProperties(ServerProperty.RESOURCE_PACK));
     }
