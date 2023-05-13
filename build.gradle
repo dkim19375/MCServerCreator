@@ -12,7 +12,7 @@ mainClassName = 'me.dkim19375.mcservercreator.MCServerCreatorMain'
 group 'me.dkim19375'
 version '1.0-SNAPSHOT'
 
-final String javafxVersion = '21-ea+5'
+final String javafxVersion = '21-ea+17'
 
 sourceCompatibility = targetCompatibility = 11
 compileJava.options.encoding = 'UTF-8'
