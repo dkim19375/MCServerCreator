@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'commons-io:commons-io:2.12.0'
+    implementation 'commons-io:commons-io:2.13.0'
     implementation 'io.github.alekseysotnikov:CmdTool:1.0.1'
     implementation 'org.jetbrains:annotations:+'
     implementation "org.openjfx:javafx-base:$javafxVersion:${platform}"
