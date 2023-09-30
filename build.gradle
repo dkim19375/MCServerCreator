@@ -3,7 +3,7 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 plugins {
     id 'java'
     id 'application'
-    id 'edu.sc.seis.launch4j' version '2.5.4'
+    id 'edu.sc.seis.launch4j' version '3.0.5'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
@@ -26,7 +26,7 @@ launch4j {
     outfile = "${project.name}-${project.version}.exe"
     mainClassName = project.mainClassName
     copyConfigurable = []
-    jar = "../libs/${project.tasks.shadowJar.archiveFileName.get()}"
+    jarTask = project.tasks.shadowJar
     version = project.version
     textVersion = project.version
     fileDescription = 'A program to create server files'
