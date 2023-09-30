@@ -26,7 +26,7 @@ launch4j {
     outfile = "${project.name}-${project.version}.exe"
     mainClassName = project.mainClassName
     copyConfigurable = []
-    jar = "../libs/${project.tasks.shadowJar.archiveFileName.get()}"
+    jarTask = project.tasks.shadowJar
     version = project.version
     textVersion = project.version
     fileDescription = 'A program to create server files'
